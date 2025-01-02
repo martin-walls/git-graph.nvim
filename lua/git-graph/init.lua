@@ -13,7 +13,11 @@ M.git_graph = function()
     -- Limit the output to 1000 commits (cos otherwise it'd load every single commit in the history...)
     -- TODO: make it lazy load once first ones loaded?
     local gitgraph = vim.api.nvim_exec2("Git lgb -1000", { output = true }).output
-    vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, utils.lines(gitgraph))
+
+    local lines = utils.lines(gitgraph)
+    lines = utils.format_graph(lines)
+
+    vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
 
     -- Basic syntax highlighting
     -- TODO: custom highlighting

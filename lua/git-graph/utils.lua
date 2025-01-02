@@ -11,4 +11,34 @@ M.lines = function(str)
     return result
 end
 
+---@param lines table
+---@return table
+M.format_graph = function(lines)
+    for i, line in ipairs(lines) do
+        local j, _ = string.find(line, "%w%w%w%w%w%w%w - ")
+
+        if j == nil then
+            line = string.gsub(line, "%*", "")
+            line = string.gsub(line, "|", "")
+            line = string.gsub(line, "\\", "╲")
+
+            lines[i] = line
+        else
+            local prefix = string.sub(line, 1, j - 2);
+            local body = string.sub(line, j - 1);
+
+            prefix = string.gsub(prefix, "%*", "")
+            prefix = string.gsub(prefix, "|", "")
+            prefix = string.gsub(prefix, "\\", "╲")
+
+
+
+            lines[i] = prefix .. body
+        end
+    end
+    return lines
+end
+
+-- TODO: strip trailing whitespace
+
 return M
