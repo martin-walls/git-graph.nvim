@@ -1,26 +1,19 @@
----Splits the given string into an array of lines.
----@param str string
----@return table
-local function lines(str)
-    local result = {}
-    for line in str:gmatch("[^\n]+") do
-        table.insert(result, line)
-    end
-    return result
-end
+local M = {}
+
+local utils = require("git-graph.utils")
 
 local HEIGHT_RATIO = 0.8
 local WIDTH_RATIO = 0.8
 local MIN_WIDTH = 60
 
-local function open_git_graph_window()
+M.git_graph = function()
     -- buflisted = false, scratch = true
     local bufnr = vim.api.nvim_create_buf(false, true)
 
     -- Limit the output to 1000 commits (cos otherwise it'd load every single commit in the history...)
-    -- TODO: in future make it lazy load once first ones loaded?
+    -- TODO: make it lazy load once first ones loaded?
     local gitgraph = vim.api.nvim_exec2("Git lgb -1000", { output = true }).output
-    vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines(gitgraph))
+    vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, utils.lines(gitgraph))
 
     -- Basic syntax highlighting
     -- TODO: custom highlighting
@@ -76,4 +69,4 @@ local function open_git_graph_window()
     })
 end
 
-vim.keymap.set("n", "<leader>gg", open_git_graph_window, { desc = "[G]it [G]raph" })
+return M
