@@ -1,6 +1,6 @@
 # git-graph.nvim
 
-Usage:
+With Lazy:
 
 ```lua
 return {
